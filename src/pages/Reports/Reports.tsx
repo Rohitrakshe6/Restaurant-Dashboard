@@ -194,8 +194,8 @@ export const Reports: React.FC = () => {
           className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden group"
         >
           <div className="p-7 flex flex-col items-center text-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-green-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <FileSpreadsheet size={32} className="text-green-600" />
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: 'var(--color-primary-soft)' }}>
+              <FileSpreadsheet size={32} style={{ color: 'var(--color-primary)' }} />
             </div>
             <div>
               <h3 className="font-extrabold text-xl text-foreground tracking-tight">CSV Report</h3>
@@ -221,8 +221,9 @@ export const Reports: React.FC = () => {
                 'w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-bold text-[15px] transition-all active:scale-[0.98]',
                 filteredOrders.length === 0
                   ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-green-600 text-white hover:bg-green-700 shadow-sm'
+                  : 'text-white hover:opacity-90 shadow-sm'
               )}
+              style={filteredOrders.length > 0 ? { backgroundColor: 'var(--color-primary)' } : {}}
             >
               <Download size={18} />
               Download CSV
@@ -236,8 +237,8 @@ export const Reports: React.FC = () => {
           className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden group"
         >
           <div className="p-7 flex flex-col items-center text-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <FileText size={32} className="text-red-500" />
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: '#FEF3C7' }}>
+              <FileText size={32} style={{ color: 'var(--color-warning)' }} />
             </div>
             <div>
               <h3 className="font-extrabold text-xl text-foreground tracking-tight">PDF Report</h3>
@@ -250,7 +251,7 @@ export const Reports: React.FC = () => {
             <ul className="w-full text-left space-y-1.5 bg-muted/40 rounded-xl p-4">
               {['Period header &amp; summary metrics', 'Customer Name &amp; Mobile No.', 'Order Type &amp; Status (colour-coded)', 'Items summary per order', 'Amount with auto page-breaks'].map(item => (
                 <li key={item} className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--color-warning)' }} />
                   <span dangerouslySetInnerHTML={{ __html: item }} />
                 </li>
               ))}
@@ -263,8 +264,9 @@ export const Reports: React.FC = () => {
                 'w-full flex items-center justify-center gap-3 py-3.5 rounded-xl font-bold text-[15px] transition-all active:scale-[0.98]',
                 filteredOrders.length === 0
                   ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : 'bg-red-500 text-white hover:bg-red-600 shadow-sm'
+                  : 'text-white hover:opacity-90 shadow-sm'
               )}
+              style={filteredOrders.length > 0 ? { backgroundColor: 'var(--color-warning)' } : {}}
             >
               <Download size={18} />
               Download PDF

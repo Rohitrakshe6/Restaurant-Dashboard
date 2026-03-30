@@ -11,7 +11,7 @@ import html2canvas from 'html2canvas';
 export const Billing: React.FC = () => {
   const [searchParams] = useSearchParams();
   const initId = searchParams.get('id');
-  const { orders, tables, menu, markOrderPaid } = useRestaurantStore();
+  const { orders, tables, menu, markOrderPaid, restaurantInfo } = useRestaurantStore();
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(initId);
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -19,7 +19,7 @@ export const Billing: React.FC = () => {
   const invoiceRef = useRef<HTMLDivElement>(null);
 
   const handleExportPDF = (order: any) => {
-    exportInvoicePDF(order, menu, tables, customerName);
+    exportInvoicePDF(order, menu, tables, customerName, false, restaurantInfo);
   };
 
   useEffect(() => {
@@ -60,7 +60,11 @@ export const Billing: React.FC = () => {
     const finalMobile = (mobileNumber && mobileNumber.length === 10) ? mobileNumber : (isNameActuallyNumber ? customerName.trim() : '');
 
     if (finalMobile) {
-      let text = `*Restroo*\n_Invoice #${selectedOrder.id.slice(-6).toUpperCase()}_\n\n`;
+      let text = `*${restaurantInfo.name}*\n`;
+      if (restaurantInfo.address) text += `_${restaurantInfo.address}_\n`;
+      if (restaurantInfo.phone) text += `📞 ${restaurantInfo.phone}\n`;
+      if (restaurantInfo.gst) text += `GSTIN: ${restaurantInfo.gst}\n`;
+      text += `\n_Invoice #${selectedOrder.id.slice(-6).toUpperCase()}_\n\n`;
       if (customerName && !isNameActuallyNumber) text += `Customer: ${customerName}\n`;
       text += `--------------------\n`;
       selectedOrder.items.forEach(item => {
@@ -250,10 +254,13 @@ export const Billing: React.FC = () => {
                 
                 <div className="px-6 py-8">
                   <div className="text-center mb-5">
-                    <h2 className="font-black text-2xl tracking-tight text-foreground mb-1">Restroo</h2>
-                    <p className="text-[14px] text-muted-foreground font-medium">ambegaon bk. ,pune</p>
-                    <div className="flex items-center justify-center gap-4 mt-1 text-[12px] text-muted-foreground/80 font-medium">
-                      <span>GSTIN: 123456984787</span>
+                    <h2 className="font-black text-2xl tracking-tight text-foreground mb-1">{restaurantInfo.name}</h2>
+                    {restaurantInfo.address && (
+                      <p className="text-[13px] text-muted-foreground font-medium">{restaurantInfo.address}</p>
+                    )}
+                    <div className="flex items-center justify-center gap-4 mt-1 text-[12px] text-muted-foreground/80 font-medium flex-wrap">
+                      {restaurantInfo.phone && <span>📞 {restaurantInfo.phone}</span>}
+                      {restaurantInfo.gst && <span>GSTIN: {restaurantInfo.gst}</span>}
                     </div>
                   </div>
                   
@@ -348,11 +355,16 @@ export const Billing: React.FC = () => {
               <button 
                 onClick={handleCheckout}
                 className={clsx(
-                  "w-full py-3 rounded-[14px] shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 font-black text-[15px] uppercase tracking-wide",
+                  "w-full py-3 rounded-[14px] shadow-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2 font-black text-[15px] uppercase tracking-wide text-white",
                   (mobileNumber.length >= 10 || /^\d{10}$/.test(customerName.trim()))
-                    ? "bg-[hsl(142,71%,45%)] hover:bg-[hsl(142,71%,40%)] text-white" 
-                    : "bg-[#09090b] hover:bg-[#18181b] text-white"
+                    ? "hover:opacity-90" 
+                    : "hover:opacity-90"
                 )}
+                style={{
+                  backgroundColor: (mobileNumber.length >= 10 || /^\d{10}$/.test(customerName.trim()))
+                    ? 'var(--color-primary)'
+                    : 'var(--color-primary)',
+                }}
               >
                 {(mobileNumber.length >= 10 || /^\d{10}$/.test(customerName.trim())) ? (
                   <>Send Bill on WhatsApp</>

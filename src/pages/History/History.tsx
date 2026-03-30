@@ -56,7 +56,7 @@ export const History: React.FC = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border/50 bg-background/50">
+              <tr style={{ borderBottomColor: 'var(--color-border)', backgroundColor: 'var(--color-table-header)' }}>
                 <th className="p-4 font-semibold text-[13px] uppercase tracking-wider text-muted-foreground">Order ID</th>
                 <th className="p-4 font-semibold text-[13px] uppercase tracking-wider text-muted-foreground whitespace-nowrap">Date &amp; Time</th>
                 <th className="p-4 font-semibold text-[13px] uppercase tracking-wider text-muted-foreground">Type</th>
@@ -82,6 +82,7 @@ export const History: React.FC = () => {
                     transition={{ delay: Math.min(idx * 0.05, 0.5) }}
                     key={order.id}
                     className="hover:bg-muted/30 transition-colors group"
+                    style={idx % 2 === 1 ? { backgroundColor: 'var(--color-table-row-alt)' } : {}}
                   >
                     <td className="p-4">
                       <span className="font-extrabold text-[15px] text-foreground">#{order.id}</span>
@@ -109,12 +110,19 @@ export const History: React.FC = () => {
                     <td className="p-4">
                       <span className={clsx(
                         'px-2.5 py-1 rounded-md text-[11px] font-extrabold uppercase tracking-wide border',
-                        order.status === 'completed' && 'bg-green-500/10 text-green-600 border-green-500/20',
-                        order.status === 'active'    && 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-                        order.status === 'billing'   && 'bg-amber-500/10 text-amber-600 border-amber-500/20',
-                        order.status === 'cancelled' && 'bg-red-500/10 text-red-600 border-red-500/20',
-                      )}>
-                        {order.status === 'active' ? 'RUNNING' : order.status}
+                        order.status === 'completed' && 'border-emerald-200',
+                        order.status === 'active'    && 'border-amber-200',
+                        order.status === 'billing'   && 'border-amber-200',
+                        order.status === 'cancelled' && 'border-red-200',
+                      )}
+                      style={{
+                        ...(order.status === 'completed' && { backgroundColor: 'var(--color-primary-soft)', color: 'var(--color-primary)' }),
+                        ...(order.status === 'active'    && { backgroundColor: '#FEF3C7', color: 'var(--color-warning)' }),
+                        ...(order.status === 'billing'   && { backgroundColor: '#FEF3C7', color: 'var(--color-warning)' }),
+                        ...(order.status === 'cancelled' && { backgroundColor: '#FEE2E2', color: 'var(--color-danger)' }),
+                      }}
+                      >
+                        {order.status === 'active' ? 'RUNNING' : order.status.toUpperCase()}
                       </span>
                     </td>
                     <td className="p-4 font-black text-foreground text-[15px] text-right group-hover:text-primary transition-colors">

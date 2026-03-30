@@ -4,6 +4,13 @@ import type { Table, MenuItem, Order, OrderItem } from '../types';
 import { mockTables, mockMenu } from '../services/mockData';
 import toast from 'react-hot-toast';
 
+export interface RestaurantInfo {
+  name: string;
+  address: string;
+  phone: string;
+  gst: string;
+}
+
 interface RestaurantState {
   orderSequence: number;
   theme: 'light' | 'dark';
@@ -18,6 +25,8 @@ interface RestaurantState {
   loginAsGuest: () => void;
   sendVerificationCode: (email: string, userData: any) => void;
   verifyCode: (code: string) => boolean;
+  restaurantInfo: RestaurantInfo;
+  updateRestaurantInfo: (info: Partial<RestaurantInfo>) => void;
   tables: Table[];
   menu: MenuItem[];
   addMenuItem: (item: Omit<MenuItem, 'id'>) => void;
@@ -40,6 +49,15 @@ export const useRestaurantStore = create<RestaurantState>()(
   persist(
     (set, get) => ({
       orderSequence: 0,
+      restaurantInfo: {
+        name: 'Restroo',
+        address: 'ambegaon bk., Pune',
+        phone: '+91 98765 43210',
+        gst: '22AAAAA0000A1Z5',
+      },
+      updateRestaurantInfo: (info) => set((state) => ({
+        restaurantInfo: { ...state.restaurantInfo, ...info }
+      })),
       theme: 'light',
       toggleTheme: () => set((state) => {
         const newTheme = state.theme === 'light' ? 'dark' : 'light';
@@ -250,7 +268,8 @@ export const useRestaurantStore = create<RestaurantState>()(
         theme: state.theme, 
         orderSequence: state.orderSequence, 
         menu: state.menu,
-        isAuthenticated: state.isAuthenticated
+        isAuthenticated: state.isAuthenticated,
+        restaurantInfo: state.restaurantInfo,
       }),
     }
   )

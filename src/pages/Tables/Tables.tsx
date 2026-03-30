@@ -9,12 +9,14 @@ import toast from 'react-hot-toast';
 
 const statusConfig = {
   available: {
-    badgeBg: 'bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-400',
+    badgeBg: 'border',
+    badgeStyle: { backgroundColor: 'var(--color-primary-soft)', color: 'var(--color-primary)', borderColor: 'var(--color-primary-soft)' },
     dot: 'bg-emerald-500',
     label: 'AVAILABLE'
   },
   occupied: {
-    badgeBg: 'bg-red-100 text-red-700 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400',
+    badgeBg: 'border',
+    badgeStyle: { backgroundColor: '#FEE2E2', color: 'var(--color-danger)', borderColor: '#FEE2E2' },
     dot: 'bg-red-500',
     label: 'OCCUPIED'
   }
@@ -109,7 +111,7 @@ const TableCard = ({ table }: { table: TableType }) => {
         <span className="text-[10px] font-semibold">{table.capacity} seats</span>
       </div>
 
-      <span className={clsx("px-3 py-0.5 rounded-full text-[9px] uppercase font-extrabold tracking-wider shadow-sm transition-colors", config.badgeBg)}>
+      <span className={clsx("px-3 py-0.5 rounded-full text-[9px] uppercase font-extrabold tracking-wider shadow-sm transition-colors", config.badgeBg)} style={config.badgeStyle}>
         {config.label}
       </span>
     </motion.div>
@@ -121,7 +123,7 @@ export const Tables: React.FC = () => {
 
   const handleAddTable = () => {
     addTable();
-    toast.success('New table added');
+    toast.success('New table added', { position: 'bottom-center' });
   };
 
   return (

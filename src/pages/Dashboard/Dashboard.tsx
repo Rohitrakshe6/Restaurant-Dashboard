@@ -4,36 +4,39 @@ import { motion } from 'framer-motion';
 import { useRestaurantStore } from '../../store/useRestaurantStore';
 import { mockMenu } from '../../services/mockData';
 import { 
-  BarChart, Bar, 
+  AreaChart, Area, 
   PieChart, Pie, Cell,
   XAxis, YAxis, 
   CartesianGrid, Tooltip, 
   ResponsiveContainer
 } from 'recharts';
-import { TrendingUp, Users, DollarSign, ShoppingBag, ArrowUpRight } from 'lucide-react';
+import { TrendingUp, Users, IndianRupee, ShoppingBag, ArrowUpRight } from 'lucide-react';
 import clsx from 'clsx';
 import { format, subDays } from 'date-fns';
 
-const PIE_COLORS = ['#607D8B', '#B0BEC5', '#333333', '#FFEBEE', '#78909C'];
+const PIE_COLORS = ['#0D9488', '#6366F1', '#F59E0B', '#F43F5E', '#8B5CF6', '#06B6D4', '#EC4899'];
 
 const StatCard = ({ title, value, icon: Icon, trend, trendValue, delay }: any) => (
   <motion.div
     initial={{ opacity: 0, y: 15 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.4 }}
-    className="relative overflow-hidden bg-card border border-border/80 rounded-[24px] p-7 shadow-sm hover:shadow-md hover:border-border transition-all flex flex-col justify-between h-[160px] group"
+    className="relative overflow-hidden bg-card border border-border rounded-[12px] p-7 shadow-card hover:shadow-md transition-all flex flex-col justify-between h-[160px] group"
   >
     <div className="flex justify-between items-start">
       <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 bg-muted/50 text-muted-foreground rounded-[12px] border border-border/60 group-hover:text-foreground group-hover:bg-muted transition-colors">
+        <div
+          className="flex items-center justify-center w-10 h-10 rounded-[10px]"
+          style={{ backgroundColor: 'var(--color-primary-soft)', color: 'var(--color-primary)' }}
+        >
           <Icon size={18} strokeWidth={2.5}/>
         </div>
-        <p className="text-[13px] font-bold text-muted-foreground uppercase tracking-widest">{title}</p>
+        <p className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--color-text-primary)' }}>{title}</p>
       </div>
       {trend && (
         <span className={clsx(
-          "flex items-center gap-1 text-[12px] font-bold px-2.5 py-1 rounded-full", 
-          trend === 'up' ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" : "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400"
+          "flex items-center gap-1 text-[12px] font-bold px-2.5 py-1 rounded-full",
+          trend === 'up' ? "bg-emerald-50 text-emerald-600" : "bg-red-50 text-red-600"
         )}>
           {trend === 'up' ? <TrendingUp size={12} strokeWidth={3}/> : <TrendingUp size={12} strokeWidth={3} className="rotate-180" />}
           {trendValue}%
@@ -41,7 +44,7 @@ const StatCard = ({ title, value, icon: Icon, trend, trendValue, delay }: any) =
       )}
     </div>
     <div className="mt-auto">
-      <h3 className="text-4xl font-black text-foreground tracking-tight">{value}</h3>
+      <h3 className="text-4xl font-black tracking-tight" style={{ color: 'var(--color-text-primary)' }}>{value}</h3>
     </div>
   </motion.div>
 );
@@ -116,7 +119,7 @@ export const Dashboard: React.FC = () => {
 
       {/* Stat Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Revenue" value={`₹${todaysRevenue}`} icon={DollarSign} trend="up" trendValue={12.5} delay={0.1} />
+        <StatCard title="Revenue" value={`₹${todaysRevenue}`} icon={IndianRupee} trend="up" trendValue={12.5} delay={0.1} />
         <StatCard title="Active" value={activeOrders.toString()} icon={ShoppingBag} trend="up" trendValue={4.2} delay={0.2} />
         <StatCard title="Competed" value={completedOrders.toString()} icon={Users} delay={0.3} />
         <StatCard title="Avg Value" value={`₹${avgOrderValue}`} icon={TrendingUp} delay={0.4} />
@@ -129,7 +132,7 @@ export const Dashboard: React.FC = () => {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
-          className="lg:col-span-3 bg-card p-6 md:p-8 rounded-[32px] shadow-sm border border-border/80 flex flex-col"
+          className="lg:col-span-3 bg-card p-6 md:p-8 rounded-[12px] shadow-card border border-border flex flex-col"
         >
           <div className="mb-8">
             <h3 className="font-extrabold text-foreground text-[20px] tracking-tight">Revenue Trend</h3>
@@ -137,17 +140,32 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="h-[320px] w-full mt-auto">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barSize={40}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'hsl(var(--muted-foreground))', fontSize: 13, fontWeight: 600}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: 'hsl(var(--muted-foreground))', fontSize: 13, fontWeight: 600}} tickFormatter={(val) => `₹${val}`} />
+              <AreaChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#059669" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#059669" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border, #e5e7eb)" opacity={0.5} />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-secondary, #6b7280)', fontSize: 13, fontWeight: 600 }} dy={10} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: 'var(--color-text-secondary, #6b7280)', fontSize: 13, fontWeight: 600 }} tickFormatter={(val) => `₹${val}`} />
                 <Tooltip 
-                  cursor={{fill: 'hsl(var(--muted))', opacity: 0.4}} 
-                  contentStyle={{ backgroundColor: 'hsl(var(--card))', color: 'hsl(var(--card-foreground))', borderRadius: '16px', border: '1px solid hsl(var(--border))', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', padding: '12px 16px', fontWeight: 'bold' }} 
+                  cursor={{ stroke: 'var(--color-primary, #059669)', strokeWidth: 1, strokeDasharray: '4 4' }} 
+                  contentStyle={{ backgroundColor: 'var(--color-bg-card, #fff)', color: 'var(--color-text-primary, #1f2937)', borderRadius: '16px', border: '1px solid var(--color-border, #e5e7eb)', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)', padding: '12px 16px', fontWeight: 'bold' }} 
+                  labelStyle={{ color: 'var(--color-text-primary, #1f2937)', fontWeight: 700, marginBottom: 4 }}
                   formatter={(value: any) => [`₹${value}`, 'Revenue']} 
                 />
-                <Bar dataKey="revenue" fill="hsl(var(--primary))" radius={[8, 8, 0, 0]} />
-              </BarChart>
+                <Area 
+                  type="monotone" 
+                  dataKey="revenue" 
+                  stroke="#059669" 
+                  strokeWidth={2.5} 
+                  fill="url(#revenueGradient)" 
+                  dot={{ r: 5, fill: '#059669', stroke: '#fff', strokeWidth: 2 }}
+                  activeDot={{ r: 7, fill: '#059669', stroke: '#fff', strokeWidth: 2.5 }}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </motion.div>
@@ -157,7 +175,7 @@ export const Dashboard: React.FC = () => {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
-          className="lg:col-span-2 bg-card p-6 md:p-8 rounded-[32px] shadow-sm border border-border/80 flex flex-col"
+          className="lg:col-span-2 bg-card p-6 md:p-8 rounded-[12px] shadow-card border border-border flex flex-col"
         >
           <div className="mb-6">
             <h3 className="font-extrabold text-foreground text-[20px] tracking-tight">Sales Categories</h3>
@@ -214,7 +232,7 @@ export const Dashboard: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.7 }}
-        className="bg-card border border-border/80 rounded-[32px] shadow-sm overflow-hidden"
+        className="bg-card border border-border rounded-[12px] shadow-card overflow-hidden"
       >
         <div className="p-6 md:p-8 border-b border-border/50 flex justify-between items-center">
           <div>
@@ -230,7 +248,7 @@ export const Dashboard: React.FC = () => {
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-muted/30">
+            <thead style={{ backgroundColor: 'var(--color-table-header)' }}>
               <tr>
                 <th className="px-8 py-4 text-[12px] uppercase text-muted-foreground font-bold tracking-widest whitespace-nowrap">Order ID</th>
                 <th className="px-8 py-4 text-[12px] uppercase text-muted-foreground font-bold tracking-widest whitespace-nowrap">Date & Time</th>
@@ -243,15 +261,15 @@ export const Dashboard: React.FC = () => {
               {recentOrders.map((order) => {
                 const total = order.totalAmount || order.items.reduce((s,i) => s + ((mockMenu.find(m=>m.id === i.menuItemId)?.price||0)*i.quantity), 0);
                 return (
-                  <tr key={order.id} className="border-b border-border/50 hover:bg-muted/20 transition-colors last:border-0">
+                  <tr key={order.id} className="border-b hover:bg-muted/30 transition-colors last:border-0" style={{ borderColor: 'var(--color-border)' }}>
                     <td className="px-8 py-6 font-bold text-foreground">#{order.id.slice(-6)}</td>
                     <td className="px-8 py-6 text-muted-foreground text-sm font-semibold">{format(new Date(order.createdAt), 'MMM dd, hh:mm a')}</td>
                     <td className="px-8 py-6">
                       <span className={clsx(
                         "px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest",
-                        order.status === 'completed' ? "bg-emerald-100 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20" :
-                        order.status === 'billing' ? "bg-amber-100 text-amber-700 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20" :
-                        "bg-emerald-50 text-emerald-600 border border-emerald-200/60 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20"
+                        order.status === 'completed' ? "bg-emerald-50 text-emerald-700 border border-emerald-200" :
+                        order.status === 'billing' ? "bg-amber-50 text-amber-700 border border-amber-200" :
+                        "bg-emerald-50 text-emerald-600 border border-emerald-200"
                       )}>
                         {order.status}
                       </span>

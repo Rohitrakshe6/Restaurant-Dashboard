@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { Layout } from './components/Layout/Layout';
@@ -23,7 +23,16 @@ const Placeholder = ({ title }: { title: string }) => (
 );
 
 function App() {
-  const { isAuthenticated } = useRestaurantStore();
+  const { isAuthenticated, theme } = useRestaurantStore();
+
+  // Apply persisted theme on initial mount (survives page refresh)
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
     <BrowserRouter>
@@ -32,9 +41,10 @@ function App() {
         toastOptions={{
           className: '',
           style: {
-            background: 'hsl(var(--card))',
-            color: 'hsl(var(--card-foreground))',
-            border: '1px solid hsl(var(--border))',
+            background: 'var(--color-bg-card)',
+            color: 'var(--color-text-primary)',
+            border: '1px solid var(--color-border)',
+            boxShadow: '0 4px 12px var(--color-shadow)',
           },
         }} 
       />

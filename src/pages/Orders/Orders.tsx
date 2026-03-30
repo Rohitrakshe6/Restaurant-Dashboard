@@ -96,7 +96,8 @@ export const Orders: React.FC = () => {
       <motion.div 
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className="w-[280px] bg-card rounded-2xl border border-border flex flex-col overflow-hidden shrink-0 shadow-sm"
+        className="w-[280px] rounded-2xl border border-border flex flex-col overflow-hidden shrink-0 shadow-sm"
+        style={{ backgroundColor: 'var(--color-table-header)' }}
       >
         <div className="p-6 pb-2">
           <h2 className="text-[13px] font-bold text-muted-foreground uppercase tracking-wider">ACTIVE ORDERS</h2>
@@ -134,9 +135,16 @@ export const Orders: React.FC = () => {
                     <span className={clsx(
                       "text-[11px] font-bold px-3 py-1 rounded-full border transition-all shadow-sm",
                       order.id === 'draft' 
-                        ? (isSelected ? "bg-amber-500 text-white border-amber-600 shadow-amber-200/50" : "bg-amber-100 text-amber-700 border-amber-200")
-                        : (isSelected ? "bg-emerald-600 text-white border-emerald-700 shadow-emerald-200/50" : "bg-emerald-100 text-emerald-700 border-emerald-200")
-                    )}>
+                        ? (isSelected ? "text-white border-amber-600" : "border-amber-200")
+                        : (isSelected ? "text-white border-emerald-700" : "border-emerald-200")
+                    )}
+                    style={{
+                      ...(order.id === 'draft' && isSelected && { backgroundColor: '#D97706' }),
+                      ...(order.id === 'draft' && !isSelected && { backgroundColor: '#FEF3C7', color: 'var(--color-warning)' }),
+                      ...(!order.id.startsWith('draft') && isSelected && { backgroundColor: 'var(--color-primary)' }),
+                      ...(!order.id.startsWith('draft') && !isSelected && { backgroundColor: 'var(--color-primary-soft)', color: 'var(--color-primary)' }),
+                    }}
+                    >
                       {order.id === 'draft' ? 'NEW' : 'Active'}
                     </span>
                   </div>
@@ -343,7 +351,10 @@ export const Orders: React.FC = () => {
                   }
                 }}
                 disabled={!currentOrder || currentOrder.items.length === 0}
-                className="flex-[2] bg-emerald-600 hover:bg-emerald-700 text-white font-bold tracking-wide text-sm py-3 rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
+              className="flex-[2] font-bold tracking-wide text-sm py-3 rounded-xl shadow-md transition-all active:scale-[0.98] disabled:opacity-50 disabled:shadow-none text-white"
+                style={{ backgroundColor: 'var(--color-primary)' }}
+                onMouseEnter={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)'; }}
+                onMouseLeave={(e) => { if (!e.currentTarget.disabled) e.currentTarget.style.backgroundColor = 'var(--color-primary)'; }}
               >
                 Generate Bill
               </button>

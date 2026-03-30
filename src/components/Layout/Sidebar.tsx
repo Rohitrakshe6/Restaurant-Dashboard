@@ -56,26 +56,36 @@ export const Sidebar: React.FC = () => {
             to={item.path}
             className={({ isActive }) =>
               clsx(
-                'flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-300 relative overflow-hidden group',
+                'flex items-center gap-4 px-3 py-3 rounded-xl transition-all duration-300 relative overflow-hidden group font-medium text-[15px]',
                 isActive
-                  ? 'bg-white/10 text-white font-medium'
-                  : 'hover:bg-white/5 text-gray-400 hover:text-white'
+                  ? 'font-semibold'
+                  : 'hover:bg-white/5 text-gray-400 hover:text-gray-100'
               )
+            }
+            style={({ isActive }) =>
+              isActive
+                ? {
+                    backgroundColor: '#D1FAE5',
+                    borderLeft: '3px solid #059669',
+                    color: '#059669',
+                    boxShadow: '0 1px 4px rgba(5,150,105,0.15)',
+                    paddingLeft: 'calc(0.75rem - 3px)',
+                  }
+                : {}
             }
           >
             {({ isActive }) => (
               <>
-                {isActive && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute inset-0 bg-white/5 border-l-[3px] border-white"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
-                <item.icon size={sidebarCollapsed ? 24 : 20} className="relative z-10 shrink-0" />
+                <item.icon
+                  size={sidebarCollapsed ? 24 : 20}
+                  className="shrink-0"
+                  style={{ color: isActive ? '#059669' : undefined }}
+                />
                 {!sidebarCollapsed && (
-                  <span className="font-medium text-[15px] relative z-10 whitespace-nowrap">
+                  <span
+                    className="whitespace-nowrap"
+                    style={{ color: isActive ? '#059669' : undefined }}
+                  >
                     {item.label}
                   </span>
                 )}

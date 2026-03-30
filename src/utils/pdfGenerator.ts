@@ -3,7 +3,14 @@ import { toast } from 'react-hot-toast';
 import type { Order, MenuItem } from '../types';
 
 // ─── Invoice PDF (single order receipt) ──────────────────────────────────────
-export const exportInvoicePDF = (order: any, menu: any[], tables: any[], customerName?: string, returnBlob = false) => {
+export interface RestaurantInfoPDF {
+  name?: string;
+  address?: string;
+  phone?: string;
+  gst?: string;
+}
+
+export const exportInvoicePDF = (order: any, menu: any[], tables: any[], customerName?: string, returnBlob = false, restaurantInfo?: RestaurantInfoPDF) => {
   try {
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [80, 200] });
 
@@ -15,15 +22,36 @@ export const exportInvoicePDF = (order: any, menu: any[], tables: any[], custome
     const sgst  = subtotal * 0.025;
     const total = subtotal + cgst + sgst;
 
+    const rName    = restaurantInfo?.name    || 'Restroo';
+    const rAddress = restaurantInfo?.address || '';
+    const rPhone   = restaurantInfo?.phone   || '';
+    const rGst     = restaurantInfo?.gst     || '';
+
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(18);
-    doc.text('Restroo', 40, 16, { align: 'center' });
+    doc.text(rName, 40, 14, { align: 'center' });
+
+    let y = 20;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    if (rAddress) {
+      doc.text(rAddress, 40, y, { align: 'center' });
+      y += 5;
+    }
+    if (rPhone) {
+      doc.text(`Tel: ${rPhone}`, 40, y, { align: 'center' });
+      y += 5;
+    }
+    if (rGst) {
+      doc.text(`GSTIN: ${rGst}`, 40, y, { align: 'center' });
+      y += 5;
+    }
 
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
-    doc.text(`Invoice #${order.id.slice(-6).toUpperCase()}`, 40, 22, { align: 'center' });
+    doc.text(`Invoice #${order.id.slice(-6).toUpperCase()}`, 40, y + 2, { align: 'center' });
+    y += 7;
 
-    let y = 28;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
 
@@ -67,7 +95,7 @@ export const exportInvoicePDF = (order: any, menu: any[], tables: any[], custome
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'italic');
-    doc.text('Thank you for visiting Restroo!', 40, y, { align: 'center' });
+    doc.text(`Thank you for visiting ${rName}!`, 40, y, { align: 'center' });
 
     if (returnBlob) return doc.output('blob');
     doc.save(`Invoice_${order.id.slice(-6).toUpperCase()}.pdf`);

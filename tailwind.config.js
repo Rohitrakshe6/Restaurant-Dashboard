@@ -7,39 +7,50 @@ export default {
   theme: {
     extend: {
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        border:     "var(--color-border)",
+        input:      "var(--color-border)",
+        ring:       "var(--color-primary)",
+        background: "var(--color-bg-main)",
+        foreground: "var(--color-text-primary)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT:    "var(--color-primary)",
+          foreground: "#FFFFFF",
         },
         sidebar: {
-          DEFAULT: "hsl(var(--sidebar))",
-          foreground: "hsl(var(--sidebar-foreground))",
+          DEFAULT:    "var(--color-bg-sidebar)",
+          foreground: "var(--color-text-primary)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT:    "var(--color-bg-card)",
+          foreground: "var(--color-text-primary)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT:    "var(--color-bg-card)",
+          foreground: "var(--color-text-primary)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT:    "var(--color-primary-soft)",
+          foreground: "var(--color-primary)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT:    "var(--color-table-header)",
+          foreground: "var(--color-text-secondary)",
         },
+        success: "var(--color-success)",
+        danger:  "var(--color-danger)",
+        warning: "var(--color-warning)",
       },
       fontFamily: {
+        sans:    ['"Inter"', "sans-serif"],
         heading: ['"Inter"', "sans-serif"],
-        body: ['"Inter"', "sans-serif"],
+        body:    ['"Inter"', "sans-serif"],
+      },
+      borderRadius: {
+        card:   "12px",
+        button: "8px",
+      },
+      boxShadow: {
+        card: "0 1px 3px rgba(0,0,0,0.06)",
       },
     },
   },

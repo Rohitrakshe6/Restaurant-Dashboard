@@ -7,9 +7,12 @@ import clsx from 'clsx';
 
 export const Settings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('general');
-  const { menu, addMenuItem, removeMenuItem } = useRestaurantStore();
+  const { menu, addMenuItem, removeMenuItem, restaurantInfo, updateRestaurantInfo } = useRestaurantStore();
+
+  const [localInfo, setLocalInfo] = React.useState({ ...restaurantInfo });
 
   const handleSave = () => {
+    updateRestaurantInfo(localInfo);
     toast.success('Settings saved successfully');
   };
 
@@ -41,19 +44,19 @@ export const Settings: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1 space-y-1">
-          <button onClick={() => setActiveTab('general')} className={clsx("w-full text-left px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors", activeTab === 'general' ? "bg-primary/10 text-primary font-bold" : "hover:bg-muted text-muted-foreground font-medium")}>
+          <button onClick={() => setActiveTab('general')} className={clsx("w-full text-left px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium", activeTab === 'general' ? "font-bold" : "hover:bg-muted")} style={activeTab === 'general' ? { borderLeft: '3px solid var(--color-primary)', backgroundColor: '#F0FDF4', color: 'var(--color-primary)', paddingLeft: '13px' } : { color: 'var(--color-nav-text)' }}>
             <Building2 size={18} /> General
           </button>
-          <button onClick={() => setActiveTab('menu')} className={clsx("w-full text-left px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors", activeTab === 'menu' ? "bg-primary/10 text-primary font-bold" : "hover:bg-muted text-muted-foreground font-medium")}>
+          <button onClick={() => setActiveTab('menu')} className={clsx("w-full text-left px-4 py-2.5 rounded-lg flex items-center gap-2 transition-colors font-medium", activeTab === 'menu' ? "font-bold" : "hover:bg-muted")} style={activeTab === 'menu' ? { borderLeft: '3px solid var(--color-primary)', backgroundColor: '#F0FDF4', color: 'var(--color-primary)', paddingLeft: '13px' } : { color: 'var(--color-nav-text)' }}>
             <Utensils size={18} /> Menu
           </button>
-          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted text-muted-foreground font-medium flex items-center gap-2 transition-colors">
+          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted font-medium flex items-center gap-2 transition-colors" style={{ color: 'var(--color-nav-text)' }}>
             <User size={18} /> Staff
           </button>
-          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted text-muted-foreground font-medium flex items-center gap-2 transition-colors">
+          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted font-medium flex items-center gap-2 transition-colors" style={{ color: 'var(--color-nav-text)' }}>
             <Bell size={18} /> Notifications
           </button>
-          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted text-muted-foreground font-medium flex items-center gap-2 transition-colors">
+          <button className="w-full text-left px-4 py-2.5 rounded-lg hover:bg-muted font-medium flex items-center gap-2 transition-colors" style={{ color: 'var(--color-nav-text)' }}>
             <Shield size={18} /> Security
           </button>
         </div>
@@ -71,15 +74,15 @@ export const Settings: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-muted-foreground">Restaurant Name</label>
-                    <input type="text" defaultValue="Restroo" className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
+                    <input type="text" value={localInfo.name} onChange={e => setLocalInfo(p => ({ ...p, name: e.target.value }))} className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-muted-foreground">Contact Number</label>
-                    <input type="text" defaultValue="+91 98765 43210" className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
+                    <label className="text-sm font-semibold text-muted-foreground">Contact / Mobile Number</label>
+                    <input type="text" value={localInfo.phone} onChange={e => setLocalInfo(p => ({ ...p, phone: e.target.value }))} className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
                     <label className="text-sm font-semibold text-muted-foreground">Address</label>
-                    <textarea rows={3} defaultValue="123 Culinary Hub, Food Street, New Delhi" className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none text-[15px]" />
+                    <textarea rows={3} value={localInfo.address} onChange={e => setLocalInfo(p => ({ ...p, address: e.target.value }))} className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none text-[15px]" />
                   </div>
                 </div>
               </div>
@@ -89,7 +92,7 @@ export const Settings: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-muted-foreground">GST Number</label>
-                    <input type="text" defaultValue="22AAAAA0000A1Z5" className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
+                    <input type="text" value={localInfo.gst} onChange={e => setLocalInfo(p => ({ ...p, gst: e.target.value }))} placeholder="Leave blank if not applicable" className="w-full bg-background font-medium text-foreground border border-border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary/50 text-[15px]" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-muted-foreground">Default Tax Rate (%)</label>

@@ -63,7 +63,13 @@ const OtpInput: React.FC<{ length: number; onComplete: (otp: string) => void }> 
           onChange={(e) => handleChange(e.target, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={handlePaste}
-          className="w-14 h-16 md:w-16 md:h-20 bg-muted/30 border-2 border-border/40 rounded-2xl text-center text-3xl font-black text-foreground focus:border-foreground focus:ring-4 focus:ring-foreground/5 transition-all outline-none"
+          className="w-14 h-16 md:w-16 md:h-20 border-2 rounded-2xl text-center text-3xl font-black text-foreground focus:ring-4 outline-none transition-all"
+          style={{ 
+            backgroundColor: 'var(--color-bg-card)',
+            borderColor: 'var(--color-border)',
+          }}
+          onFocus={(e) => { e.target.style.borderColor = 'var(--color-primary)'; }}
+          onBlur={(e) => { e.target.style.borderColor = 'var(--color-border)'; }}
         />
       ))}
     </div>
@@ -136,7 +142,7 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] relative flex flex-col items-center justify-center p-4 overflow-hidden">
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-4 overflow-hidden" style={{ backgroundColor: 'var(--color-bg-main)' }}>
       
       {/* Mesh Gradient Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-30">
@@ -250,7 +256,10 @@ export const Login: React.FC = () => {
 
                   <button 
                     type="submit"
-                    className="w-full py-4.5 rounded-2xl bg-foreground text-background flex items-center justify-center gap-2 font-bold text-[15px] tracking-wide transition-all active:scale-[0.98] shadow-lg shadow-foreground/10"
+                    className="w-full py-4.5 rounded-2xl flex items-center justify-center gap-2 font-bold text-[15px] tracking-wide transition-all active:scale-[0.98] shadow-md text-white"
+                    style={{ backgroundColor: 'var(--color-primary)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
                   >
                     {isLogin ? (
                       <>Sign In <ArrowRight size={18} /></>
@@ -326,7 +335,10 @@ export const Login: React.FC = () => {
                   <div className="flex flex-col gap-4">
                     <button 
                       onClick={() => handleVerifyOtp()}
-                      className="w-full py-4.5 rounded-2xl bg-foreground text-background flex items-center justify-center gap-2 font-bold text-[15px] tracking-wide transition-all active:scale-[0.98] shadow-lg shadow-foreground/10"
+                      className="w-full py-4.5 rounded-2xl flex items-center justify-center gap-2 font-bold text-[15px] tracking-wide transition-all active:scale-[0.98] shadow-md text-white"
+                      style={{ backgroundColor: 'var(--color-primary)' }}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary-hover)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--color-primary)')}
                     >
                       Verify & Register <ArrowRight size={18} />
                     </button>
